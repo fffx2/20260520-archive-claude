@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>UNIVASSIST — 이하얀 archive</title>
+  <link rel="stylesheet" href="../css/style.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <style>
+    .section { padding: 48px 0 80px; }
+
+    /* 뒤로가기 */
+    .back-link {
+      display: inline-flex; align-items: center; gap: 6px;
+      font-size: 12px; color: var(--muted);
+      margin-bottom: 36px; transition: color var(--t);
+    }
+    .back-link:hover { color: var(--sora-d); }
+
+    /* 상단 헤더 */
+    .detail-header { margin-bottom: 40px; }
+    .detail-eyebrow {
+      font-size: 11px; font-weight: 500;
+      color: var(--sora-d); letter-spacing: .1em;
+      text-transform: uppercase; margin-bottom: 10px;
+    }
+    .detail-title {
+      font-size: 36px; font-weight: 600;
+      color: var(--title); line-height: 1.2;
+      letter-spacing: -.02em; margin-bottom: 12px;
+    }
+    .detail-subtitle {
+      font-size: 14px; color: var(--sub);
+      line-height: 1.75; margin-bottom: 20px;
+    }
+    .detail-tags { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 28px; }
+
+    /* CTA 버튼 */
+    .cta-row { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 48px; }
+    .link-btn {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 10px 22px; border-radius: var(--r-pill);
+      font-size: 13px; font-weight: 500;
+      font-family: 'Pretendard', sans-serif;
+      border: none; cursor: pointer; transition: all var(--t);
+    }
+    .link-btn-primary { background: var(--sora); color: #fff; }
+    .link-btn-primary:hover { background: var(--sora-d); transform: translateY(-1px); }
+    .link-btn-outline {
+      background: transparent;
+      border: 0.5px solid var(--border); color: var(--sub);
+    }
+    .link-btn-outline:hover { border-color: var(--sora); color: var(--sora-d); }
+
+    /* 프로젝트 소개 */
+    .section-title {
+      font-size: 14px; font-weight: 600; color: var(--title);
+      margin-bottom: 14px; padding-bottom: 10px;
+      border-bottom: 0.5px solid var(--border);
+    }
+    .body-text {
+      font-size: 13px; color: var(--sub);
+      line-height: 1.95; margin-bottom: 48px;
+    }
+
+    /* ── 이미지 갤러리 (비중있게) ── */
+    .gallery-wrap { margin-bottom: 56px; }
+    .gallery-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 14px;
+    }
+    .gallery-item {
+      border-radius: var(--r-sm);
+      overflow: hidden;
+      border: 0.5px solid var(--border);
+      background: var(--card-bg);
+      cursor: pointer;
+      transition: all var(--t);
+      aspect-ratio: 3/4; /* 세로 이미지 기본 */
+    }
+    .gallery-item.landscape { aspect-ratio: 4/3; }
+    .gallery-item:hover {
+      border-color: var(--sora);
+      box-shadow: 0 4px 20px rgba(127,179,200,0.16);
+      transform: translateY(-2px);
+    }
+    .gallery-item img {
+      width: 100%; height: 100%;
+      object-fit: cover; display: block;
+      transition: transform 0.4s ease;
+    }
+    .gallery-item:hover img { transform: scale(1.03); }
+    .gallery-placeholder {
+      width: 100%; height: 100%;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      gap: 8px; color: var(--muted); font-size: 11px;
+      text-align: center; padding: 16px;
+    }
+    .gallery-placeholder i { font-size: 26px; color: var(--border); margin-bottom: 4px; }
+    .gallery-caption {
+      padding: 9px 12px; font-size: 11px;
+      color: var(--sub); background: var(--bg);
+      border-top: 0.5px solid var(--border);
+    }
+
+    /* ── 하단 2열: 프로젝트 소개 + 정보카드 ── */
+    .bottom-grid {
+      display: grid;
+      grid-template-columns: 1fr 300px;
+      gap: 40px;
+      align-items: start;
+    }
+
+    /* 정보 카드 */
+    .info-card {
+      background: var(--surface);
+      border: 0.5px solid var(--border);
+      border-radius: var(--r-md);
+      padding: 22px;
+      position: sticky;
+      top: calc(var(--nav-h) + 20px);
+    }
+    .info-card-title {
+      font-size: 12px; font-weight: 600;
+      color: var(--title); margin-bottom: 16px;
+      text-transform: uppercase; letter-spacing: .06em;
+    }
+    /* 기본 정보 rows */
+    .info-row {
+      display: flex; justify-content: space-between;
+      align-items: baseline; font-size: 12px;
+      padding: 8px 0;
+      border-bottom: 0.5px solid var(--border);
+    }
+    .info-row:last-of-type { border-bottom: none; }
+    .info-label { color: var(--muted); }
+    .info-value { color: var(--title); font-weight: 500; text-align: right; }
+
+    /* 주요 기능 리스트 (카드 안) */
+    .info-divider {
+      height: 0.5px; background: var(--border);
+      margin: 16px 0;
+    }
+    .info-features { display: flex; flex-direction: column; gap: 10px; }
+    .info-feature {
+      display: flex; align-items: flex-start; gap: 9px;
+      font-size: 12px; color: var(--sub); line-height: 1.55;
+    }
+    .info-feature i {
+      color: var(--sora); font-size: 11px;
+      margin-top: 2px; flex-shrink: 0;
+    }
+
+    /* 라이트박스 */
+    .lightbox {
+      display: none; position: fixed; inset: 0;
+      background: rgba(0,0,0,0.88); z-index: 999;
+      align-items: center; justify-content: center;
+      padding: 32px;
+    }
+    .lightbox.open { display: flex; }
+    .lightbox img {
+      max-height: 92vh; max-width: 90vw;
+      object-fit: contain; border-radius: var(--r-sm);
+    }
+    .lightbox-close {
+      position: absolute; top: 20px; right: 24px;
+      color: #fff; font-size: 22px; cursor: pointer;
+      background: none; border: none; opacity: .7;
+      transition: opacity var(--t);
+    }
+    .lightbox-close:hover { opacity: 1; }
+
+    @media (max-width: 860px) {
+      .gallery-grid { grid-template-columns: repeat(2,1fr); }
+      .bottom-grid { grid-template-columns: 1fr; }
+      .info-card { position: static; }
+    }
+    @media (max-width: 540px) {
+      .gallery-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body class="page-top">
+
+  <nav class="nav" id="nav">
+    <div class="nav-inner">
+      <a href="../index.html" class="nav-logo">이하얀 <span>archive</span></a>
+      <ul class="nav-links">
+        <li><a href="../index.html">홈</a></li>
+        <li><a href="../lessons/index.html">수업자료</a></li>
+        <li><a href="../works/index.html">우수작</a></li>
+        <li><a href="index.html" class="active">포트폴리오</a></li>
+        <li><a href="../about.html">소개</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <section class="section">
+    <div class="container">
+
+      <a href="index.html" class="back-link fade-up">
+        <i class="fa-solid fa-arrow-left"></i> 포트폴리오 목록으로
+      </a>
+
+      <!-- 상단 헤더 -->
+      <div class="detail-header fade-up">
+        <div class="detail-eyebrow">Portfolio · 2024 · 석사논문 연계 프로젝트</div>
+        <h1 class="detail-title">UNIVASSIST</h1>
+        <p class="detail-subtitle">
+          AI 기반 유니버설 디자인 시스템 생성 도구.<br>
+          색채 접근성과 타이포그래피를 AI로 자동 설계합니다.
+        </p>
+        <div class="detail-tags">
+          <span class="tag tag-sora">유니버설 디자인</span>
+          <span class="tag tag-sora">AI</span>
+          <span class="tag">웹앱</span>
+          <span class="tag">접근성</span>
+          <span class="tag">WCAG 2.1</span>
+          <span class="tag">Netlify</span>
+        </div>
+        <div class="cta-row">
+          <a href="https://gleaming-gnome-e2fad6.netlify.app/"
+             target="_blank" rel="noopener noreferrer"
+             class="link-btn link-btn-primary">
+            <i class="fa-solid fa-arrow-up-right-from-square"></i>
+            UNIVASSIST 바로가기
+          </a>
+          <a href="index.html" class="link-btn link-btn-outline">
+            <i class="fa-solid fa-arrow-left"></i> 목록으로
+          </a>
+        </div>
+      </div>
+
+      <!-- 프로젝트 소개 -->
+      <div class="fade-up">
+        <div class="section-title">프로젝트 소개</div>
+        <p class="body-text">
+          서비스 목적·플랫폼·무드·키워드를 입력하면 WCAG 2.1 기준을 충족하는
+          컬러시스템을 AI가 자동으로 생성합니다. 색각 이상자(적록색약) 시뮬레이션과
+          명도 대비를 실시간으로 검증하며, 웹폰트 페어링 추천과 플랫폼별 타이포그래피
+          가이드까지 하나의 도구로 제공합니다.<br><br>
+          숙명여자대학교 교육대학원 AI융합교육학과 석사 논문 연계 프로젝트로,
+          디자인을 배우는 학습자가 접근성 원칙을 실습 환경에서 직접 체험할 수 있도록 설계했습니다.
+        </p>
+      </div>
+
+      <!-- ★ 이미지 갤러리 (비중 크게) -->
+      <div class="gallery-wrap fade-up">
+        <div class="section-title">작품 이미지</div>
+        <div class="gallery-grid">
+
+          <!--
+            ★★★ 이미지 추가 방법 ★★★
+
+            1. 이미지 파일을 images/portfolio/ 폴더에 저장
+               파일명: univassist-01.jpg, univassist-02.jpg ...
+                       (영문 소문자 + 하이픈, 한글·공백·대문자 금지)
+
+            2. 세로 이미지 → class="gallery-item portrait"   (3:4 비율)
+               가로 이미지 → class="gallery-item landscape"  (4:3 비율)
+
+            3. 이미지 추가 시: 아래 <img> 주석 해제 + <div class="gallery-placeholder"> 삭제
+               gallery-caption 텍스트도 원하는 설명으로 수정
+          -->
+
+          <!-- 이미지 1 -->
+          <div class="gallery-item portrait" onclick="openLightbox(this)">
+            <!--
+              <img src="../images/portfolio/univassist-01.jpg" alt="컬러시스템 설계 화면">
+            -->
+            <div class="gallery-placeholder">
+              <i class="fa-solid fa-image"></i>
+              <strong>univassist-01.jpg</strong>
+              <span>images/portfolio/ 폴더에 저장 후<br>위 img 주석 해제</span>
+            </div>
+            <div class="gallery-caption">컬러시스템 설계 화면</div>
+          </div>
+
+          <!-- 이미지 2 -->
+          <div class="gallery-item portrait" onclick="openLightbox(this)">
+            <!--
+              <img src="../images/portfolio/univassist-02.jpg" alt="유니버설 컬러 실험실">
+            -->
+            <div class="gallery-placeholder">
+              <i class="fa-solid fa-image"></i>
+              <strong>univassist-02.jpg</strong>
+              <span>images/portfolio/ 폴더에 저장 후<br>위 img 주석 해제</span>
+            </div>
+            <div class="gallery-caption">유니버설 컬러 실험실</div>
+          </div>
+
+          <!-- 이미지 3 -->
+          <div class="gallery-item portrait" onclick="openLightbox(this)">
+            <!--
+              <img src="../images/portfolio/univassist-03.jpg" alt="AI 디자인 리포트">
+            -->
+            <div class="gallery-placeholder">
+              <i class="fa-solid fa-image"></i>
+              <strong>univassist-03.jpg</strong>
+              <span>images/portfolio/ 폴더에 저장 후<br>위 img 주석 해제</span>
+            </div>
+            <div class="gallery-caption">AI 디자인 리포트</div>
+          </div>
+
+          <!--
+            이미지 추가 시 블록 복사해서 사용:
+            <div class="gallery-item portrait" onclick="openLightbox(this)">
+              <img src="../images/portfolio/univassist-04.jpg" alt="설명">
+              <div class="gallery-caption">캡션</div>
+            </div>
+          -->
+
+        </div>
+      </div>
+
+      <!-- 하단: 상세설명 + 정보카드 -->
+      <div class="bottom-grid fade-up">
+
+        <!-- 왼쪽: 추가 설명 (필요시 내용 추가) -->
+        <div>
+          <div class="section-title">개발 배경</div>
+          <p class="body-text" style="margin-bottom:0">
+            마이스터고 디자인 수업에서 학생들이 색채 시스템을 설계할 때
+            접근성 기준을 체감하기 어렵다는 문제에서 출발했습니다.
+            이론으로만 배우던 WCAG 기준을 실시간으로 확인하고,
+            색각 이상자 시각으로 직접 시뮬레이션해 볼 수 있는 도구가 필요했습니다.
+            AI를 활용해 초안을 빠르게 생성하고, 학생이 직접 조정하는 방식으로
+            유니버설 디자인 감각을 키울 수 있도록 설계했습니다.
+          </p>
+        </div>
+
+        <!-- 오른쪽: 정보 + 주요 기능 카드 -->
+        <div class="info-card">
+          <div class="info-card-title">프로젝트 정보</div>
+          <div class="info-row"><span class="info-label">연도</span><span class="info-value">2024</span></div>
+          <div class="info-row"><span class="info-label">유형</span><span class="info-value">웹 애플리케이션</span></div>
+          <div class="info-row"><span class="info-label">연계</span><span class="info-value">석사논문</span></div>
+          <div class="info-row"><span class="info-label">배포</span><span class="info-value">Netlify</span></div>
+          <div class="info-row"><span class="info-label">AI</span><span class="info-value">Claude / OpenAI</span></div>
+
+          <div class="info-divider"></div>
+          <div class="info-card-title">주요 기능</div>
+          <div class="info-features">
+            <div class="info-feature">
+              <i class="fa-solid fa-circle-check"></i>
+              <span>컬러시스템 설계 — 무드·키워드 기반 AI 팔레트 자동 생성</span>
+            </div>
+            <div class="info-feature">
+              <i class="fa-solid fa-circle-check"></i>
+              <span>WCAG 2.1 명도 대비 실시간 테스트</span>
+            </div>
+            <div class="info-feature">
+              <i class="fa-solid fa-circle-check"></i>
+              <span>적록색약 시각 시뮬레이션</span>
+            </div>
+            <div class="info-feature">
+              <i class="fa-solid fa-circle-check"></i>
+              <span>AI 웹폰트 페어링 추천</span>
+            </div>
+            <div class="info-feature">
+              <i class="fa-solid fa-circle-check"></i>
+              <span>CSS / SCSS 코드 자동 생성 및 내보내기</span>
+            </div>
+            <div class="info-feature">
+              <i class="fa-solid fa-circle-check"></i>
+              <span>PDF / WORD 디자인 리포트 다운로드</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+  </section>
+
+  <!-- 라이트박스 -->
+  <div class="lightbox" id="lightbox" onclick="closeLightbox()">
+    <button class="lightbox-close" onclick="closeLightbox()">
+      <i class="fa-solid fa-xmark"></i>
+    </button>
+    <img id="lightboxImg" src="" alt="" onclick="event.stopPropagation()">
+  </div>
+
+  <footer class="footer">
+    <div class="footer-inner">
+      <div class="footer-logo">이하얀 <span>archive</span></div>
+      <div class="footer-copy">© 2026 이하얀 · 마이스터고 디자인과 수업 아카이브</div>
+    </div>
+  </footer>
+
+  <button class="scroll-top" id="scrollTop" aria-label="맨 위로">
+    <i class="fa-solid fa-chevron-up"></i>
+  </button>
+
+  <script src="../js/main.js"></script>
+  <script>
+    function openLightbox(el) {
+      const img = el.querySelector('img');
+      if (!img) return;
+      document.getElementById('lightboxImg').src = img.src;
+      document.getElementById('lightboxImg').alt = img.alt;
+      document.getElementById('lightbox').classList.add('open');
+      document.body.style.overflow = 'hidden';
+    }
+    function closeLightbox() {
+      document.getElementById('lightbox').classList.remove('open');
+      document.body.style.overflow = '';
+    }
+    document.addEventListener('keydown', e => {
+      if (e.key === 'Escape') closeLightbox();
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>UI/UX 엔지니어링 — 이하얀 archive</title>
+  <!--
+    ★ 새 과목 파일 만들 때:
+       1. 이 파일을 복사 → 파일명: lessons/[연도]-[과목코드].html
+       2. <title> 의 과목명 수정
+       3. .page-hero 안의 학년·과목명·설명 수정
+       4. 수업 카드(.lesson-detail-card) 복사해서 내용 채우기
+       5. 이미지 src 경로 = ../images/lessons/[파일명].jpg
+       6. 첨부파일 href 경로 = ../files/[연도]_[과목]_[자료명].pdf
+  -->
+  <link rel="stylesheet" href="../css/style.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <style>
+    .section { padding: 56px 0 80px; }
+
+    /* 수업 상세 카드 */
+    .lesson-detail-card {
+      background: var(--bg);
+      border: 0.5px solid var(--border);
+      border-radius: var(--r-md);
+      overflow: hidden;
+      margin-bottom: 20px;
+      transition: border-color var(--t);
+    }
+    .lesson-detail-card:hover { border-color: var(--sora-l); }
+
+    /* 카드 헤더 (클릭해 펼치기) */
+    .ldc-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 20px 24px;
+      cursor: pointer;
+      user-select: none;
+      gap: 16px;
+    }
+    .ldc-header-left { display: flex; align-items: center; gap: 16px; }
+    .ldc-num {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--sora);
+      background: var(--sora-l);
+      border-radius: var(--r-pill);
+      padding: 3px 10px;
+      white-space: nowrap;
+    }
+    .ldc-title {
+      font-size: 15px;
+      font-weight: 500;
+      color: var(--title);
+    }
+    .ldc-tags { display: flex; gap: 5px; }
+    .ldc-toggle {
+      font-size: 13px;
+      color: var(--muted);
+      transition: transform var(--t);
+      flex-shrink: 0;
+    }
+    .lesson-detail-card.open .ldc-toggle { transform: rotate(180deg); }
+
+    /* 카드 바디 (접힘/펼침) */
+    .ldc-body {
+      display: none;
+      border-top: 0.5px solid var(--border);
+      padding: 24px;
+    }
+    .lesson-detail-card.open .ldc-body { display: block; }
+
+    /* 이미지 그리드 */
+    .img-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+    .img-grid-single { grid-template-columns: 1fr; }
+    .img-placeholder {
+      aspect-ratio: 16/10;
+      background: var(--card-bg);
+      border-radius: var(--r-sm);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 28px;
+      color: var(--muted);
+      overflow: hidden;
+    }
+    .img-placeholder img { width: 100%; height: 100%; object-fit: cover; }
+
+    /* 설명 텍스트 */
+    .ldc-desc {
+      font-size: 13px;
+      color: var(--sub);
+      line-height: 1.85;
+      margin-bottom: 20px;
+    }
+
+    /* 첨부파일 */
+    .file-list { display: flex; flex-direction: column; gap: 8px; }
+    .file-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 14px;
+      background: var(--surface);
+      border: 0.5px solid var(--border);
+      border-radius: var(--r-sm);
+      font-size: 12px;
+      color: var(--sub);
+      transition: all var(--t);
+    }
+    .file-item:hover {
+      border-color: var(--sora);
+      color: var(--sora-d);
+      background: var(--sora-l);
+    }
+    .file-item i { color: var(--sora); font-size: 14px; }
+    .file-item .file-name { flex: 1; }
+    .file-item .file-dl { font-size: 11px; color: var(--muted); }
+    .file-item:hover .file-dl { color: var(--sora-d); }
+
+    /* 과목 헤더 정보 */
+    .subject-info {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-top: 16px;
+    }
+    .info-chip {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 12px;
+      color: var(--sub);
+      background: var(--surface);
+      border: 0.5px solid var(--border);
+      padding: 5px 12px;
+      border-radius: var(--r-pill);
+    }
+    .info-chip i { color: var(--sora); font-size: 12px; }
+  </style>
+</head>
+<body class="page-top">
+
+  <nav class="nav" id="nav">
+    <div class="nav-inner">
+      <a href="../index.html" class="nav-logo">이하얀 <span>archive</span></a>
+      <ul class="nav-links">
+        <li><a href="../index.html">홈</a></li>
+        <li><a href="index.html" class="active">수업자료</a></li>
+        <li><a href="../works/index.html">우수작</a></li>
+        <li><a href="../portfolio/index.html">포트폴리오</a></li>
+        <li><a href="../about.html">소개</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <!-- PAGE HERO -->
+  <div class="page-hero">
+    <div class="container">
+      <div style="font-size:12px;color:var(--sora-d);margin-bottom:8px">
+        <a href="index.html" style="color:var(--muted)">수업자료</a>
+        <span style="margin:0 6px;color:var(--border)">›</span>
+        2026학년도
+      </div>
+      <div class="page-hero-eyebrow fade-up">UI/UX 엔지니어링</div>
+      <h1 class="page-hero-title fade-up" style="transition-delay:.08s">수업 자료 목록</h1>
+      <p class="page-hero-desc fade-up" style="transition-delay:.16s">
+        2학년 대상 UI·UX 설계 수업 자료입니다. 카드를 클릭하면 내용과 첨부파일을 볼 수 있습니다.
+      </p>
+      <div class="subject-info fade-up" style="transition-delay:.24s">
+        <div class="info-chip"><i class="fa-solid fa-users"></i> 2학년</div>
+        <div class="info-chip"><i class="fa-solid fa-calendar"></i> 2026학년도</div>
+        <div class="info-chip"><i class="fa-solid fa-book"></i> 수업 4개</div>
+      </div>
+    </div>
+  </div>
+
+  <section class="section">
+    <div class="container">
+
+      <!--
+        ★ 수업 카드 추가 방법:
+           1. 아래 .lesson-detail-card 블록 전체 복사
+           2. ldc-num 번호 수정
+           3. ldc-title 수업 제목 수정
+           4. ldc-tags 태그 수정
+           5. img-placeholder 안에 img 태그 추가:
+              <img src="../images/lessons/detail-uiux-01.jpg" alt="수업 설명">
+           6. ldc-desc 설명 수정
+           7. file-item 첨부파일 경로·이름 수정
+      -->
+
+      <!-- 수업 01 -->
+      <div class="lesson-detail-card open fade-up">
+        <div class="ldc-header">
+          <div class="ldc-header-left">
+            <span class="ldc-num">01</span>
+            <span class="ldc-title">사용자 경험(UX) 설계 원리</span>
+            <div class="ldc-tags">
+              <span class="tag">이론</span>
+            </div>
+          </div>
+          <i class="fa-solid fa-chevron-down ldc-toggle"></i>
+        </div>
+        <div class="ldc-body">
+          <div class="img-grid">
+            <div class="img-placeholder">
+              <!-- <img src="../images/lessons/detail-uiux-01.jpg" alt="UX 설계 원리"> -->
+              <i class="fa-solid fa-pen-ruler"></i>
+            </div>
+            <div class="img-placeholder">
+              <!-- <img src="../images/lessons/detail-uiux-02.jpg" alt="UX 워크시트"> -->
+              <i class="fa-solid fa-file-lines"></i>
+            </div>
+          </div>
+          <p class="ldc-desc">
+            사용자 중심 디자인(UCD)의 핵심 원리를 학습합니다. 사용자 리서치, 페르소나 설정,
+            정보 구조(IA) 설계까지 UX 프로세스 전반을 이론과 실습을 병행해 익힙니다.
+          </p>
+          <div class="file-list">
+            <a href="../files/2026_uiux_lecture01.pdf" download class="file-item">
+              <i class="fa-solid fa-file-pdf"></i>
+              <span class="file-name">UX 설계 원리 강의자료.pdf</span>
+              <span class="file-dl"><i class="fa-solid fa-download"></i> 다운로드</span>
+            </a>
+            <a href="../files/2026_uiux_worksheet01.pdf" download class="file-item">
+              <i class="fa-solid fa-file-lines"></i>
+              <span class="file-name">페르소나 워크시트.pdf</span>
+              <span class="file-dl"><i class="fa-solid fa-download"></i> 다운로드</span>
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <!-- 수업 02 -->
+      <div class="lesson-detail-card fade-up" style="transition-delay:.08s">
+        <div class="ldc-header">
+          <div class="ldc-header-left">
+            <span class="ldc-num">02</span>
+            <span class="ldc-title">와이어프레임 제작 실습</span>
+            <div class="ldc-tags">
+              <span class="tag">실습</span>
+            </div>
+          </div>
+          <i class="fa-solid fa-chevron-down ldc-toggle"></i>
+        </div>
+        <div class="ldc-body">
+          <div class="img-grid img-grid-single">
+            <div class="img-placeholder">
+              <i class="fa-solid fa-table-cells-large"></i>
+            </div>
+          </div>
+          <p class="ldc-desc">
+            Figma를 활용한 저해상도 와이어프레임 제작 실습. 앱 화면 구조 설계,
+            네비게이션 흐름, 주요 화면 레이아웃을 직접 제작합니다.
+          </p>
+          <div class="file-list">
+            <a href="../files/2026_uiux_figma-template.fig" download class="file-item">
+              <i class="fa-solid fa-file"></i>
+              <span class="file-name">와이어프레임 Figma 템플릿</span>
+              <span class="file-dl"><i class="fa-solid fa-download"></i> 다운로드</span>
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <!-- 수업 03 -->
+      <div class="lesson-detail-card fade-up" style="transition-delay:.16s">
+        <div class="ldc-header">
+          <div class="ldc-header-left">
+            <span class="ldc-num">03</span>
+            <span class="ldc-title">사용성 평가와 개선</span>
+            <div class="ldc-tags">
+              <span class="tag">이론+실습</span>
+            </div>
+          </div>
+          <i class="fa-solid fa-chevron-down ldc-toggle"></i>
+        </div>
+        <div class="ldc-body">
+          <div class="img-grid">
+            <div class="img-placeholder"><i class="fa-solid fa-magnifying-glass"></i></div>
+            <div class="img-placeholder"><i class="fa-solid fa-chart-bar"></i></div>
+          </div>
+          <p class="ldc-desc">
+            휴리스틱 평가법을 활용해 기존 앱의 사용성 문제를 진단하고,
+            개선 방향을 도출하는 실습 수업입니다.
+          </p>
+          <div class="file-list">
+            <a href="../files/2026_uiux_heuristic.pdf" download class="file-item">
+              <i class="fa-solid fa-file-pdf"></i>
+              <span class="file-name">휴리스틱 평가 체크리스트.pdf</span>
+              <span class="file-dl"><i class="fa-solid fa-download"></i> 다운로드</span>
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <!-- 수업 04 -->
+      <div class="lesson-detail-card fade-up" style="transition-delay:.24s">
+        <div class="ldc-header">
+          <div class="ldc-header-left">
+            <span class="ldc-num">04</span>
+            <span class="ldc-title">최종 프로토타입 발표</span>
+            <div class="ldc-tags">
+              <span class="tag">발표</span>
+            </div>
+          </div>
+          <i class="fa-solid fa-chevron-down ldc-toggle"></i>
+        </div>
+        <div class="ldc-body">
+          <div class="img-grid img-grid-single">
+            <div class="img-placeholder">
+              <i class="fa-solid fa-display"></i>
+            </div>
+          </div>
+          <p class="ldc-desc">
+            한 학기 동안 제작한 UI·UX 프로젝트의 최종 발표 수업.
+            Figma 프로토타입을 시연하고 설계 의도와 사용성을 설명합니다.
+          </p>
+          <div class="file-list">
+            <a href="../files/2026_uiux_rubric.pdf" download class="file-item">
+              <i class="fa-solid fa-file-pdf"></i>
+              <span class="file-name">발표 평가 루브릭.pdf</span>
+              <span class="file-dl"><i class="fa-solid fa-download"></i> 다운로드</span>
+            </a>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <footer class="footer">
+    <div class="footer-inner">
+      <div class="footer-logo">이하얀 <span>archive</span></div>
+      <div class="footer-copy">© 2026 이하얀 · 마이스터고 디자인과 수업 아카이브</div>
+    </div>
+  </footer>
+
+  <button class="scroll-top" id="scrollTop" aria-label="맨 위로">
+    <i class="fa-solid fa-chevron-up"></i>
+  </button>
+
+  <script src="../js/main.js"></script>
+  <script>
+    /* 수업 카드 아코디언 토글 */
+    document.querySelectorAll('.ldc-header').forEach(header => {
+      header.addEventListener('click', () => {
+        const card = header.closest('.lesson-detail-card');
+        card.classList.toggle('open');
+      });
+    });
+  </script>
+</body>
+</html>

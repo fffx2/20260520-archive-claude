@@ -1,0 +1,489 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>소개 — 이하얀 archive</title>
+  <link rel="stylesheet" href="css/style.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <style>
+    .section { padding: 56px 0 80px; }
+
+    /* 프로필 */
+    .profile-wrap {
+      display: grid;
+      grid-template-columns: 240px 1fr;
+      gap: 56px;
+      align-items: start;
+      margin-bottom: 64px;
+    }
+    .profile-img {
+      width: 100%;
+      aspect-ratio: 1;
+      border-radius: var(--r-md);
+      background: var(--sora-l);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 60px;
+      color: var(--sora-d);
+    }
+    .profile-name { font-size: 28px; font-weight: 600; color: var(--title); margin-bottom: 4px; }
+    .profile-sub  { font-size: 13px; color: var(--muted); margin-bottom: 18px; }
+    .profile-desc { font-size: 13px; color: var(--sub); line-height: 1.9; margin-bottom: 22px; }
+    .profile-contact { display: flex; flex-direction: column; gap: 8px; }
+    .contact-row { display: flex; align-items: flex-start; gap: 10px; font-size: 13px; color: var(--sub); }
+    .contact-row i { width: 18px; color: var(--sora); font-size: 13px; margin-top: 2px; flex-shrink: 0; }
+    .contact-row a { color: var(--sora-d); word-break: break-all; }
+    .contact-row a:hover { text-decoration: underline; }
+
+    /* 섹션 구분 */
+    .about-section { margin-bottom: 56px; }
+    .about-section:last-child { margin-bottom: 0; }
+    .about-section-title {
+      font-size: 18px;
+      font-weight: 600;
+      color: var(--title);
+      padding-bottom: 12px;
+      border-bottom: 0.5px solid var(--border);
+      margin-bottom: 24px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .about-section-title i { color: var(--sora); font-size: 16px; }
+
+    /* 타임라인 */
+    .timeline { position: relative; padding-left: 22px; }
+    .timeline::before {
+      content: '';
+      position: absolute;
+      left: 0; top: 8px; bottom: 8px;
+      width: 1.5px;
+      background: var(--border);
+    }
+    .tl-item { position: relative; margin-bottom: 22px; }
+    .tl-item:last-child { margin-bottom: 0; }
+    .tl-item::before {
+      content: '';
+      position: absolute;
+      left: -26px; top: 6px;
+      width: 8px; height: 8px;
+      border-radius: 50%;
+      background: var(--sora);
+      border: 2px solid var(--bg);
+      box-shadow: 0 0 0 1.5px var(--sora);
+    }
+    .tl-year  { font-size: 11px; font-weight: 500; color: var(--sora-d); letter-spacing: .05em; margin-bottom: 2px; }
+    .tl-title { font-size: 14px; font-weight: 500; color: var(--title); margin-bottom: 2px; line-height: 1.45; }
+    .tl-desc  { font-size: 12px; color: var(--sub); line-height: 1.7; }
+    .tl-link  { font-size: 11px; color: var(--sora-d); display: inline-flex; align-items: center; gap: 4px; margin-top: 4px; }
+    .tl-link:hover { text-decoration: underline; }
+
+    /* 수상 카드 */
+    .award-list { display: flex; flex-direction: column; gap: 12px; }
+    .award-card {
+      background: var(--surface);
+      border: 0.5px solid var(--border);
+      border-left: 3px solid var(--sora);
+      border-radius: 0 var(--r-sm) var(--r-sm) 0;
+      padding: 14px 18px;
+      transition: all var(--t);
+    }
+    .award-card:hover { border-left-color: var(--sora-d); background: #EEF6FA; }
+    .award-year  { font-size: 11px; font-weight: 500; color: var(--sora-d); margin-bottom: 3px; }
+    .award-title { font-size: 13px; font-weight: 500; color: var(--title); line-height: 1.5; margin-bottom: 2px; }
+    .award-badge {
+      display: inline-block;
+      font-size: 10px;
+      font-weight: 500;
+      background: var(--sora-l);
+      color: var(--sora-d);
+      padding: 2px 8px;
+      border-radius: var(--r-pill);
+      margin-top: 4px;
+    }
+
+    /* 집필 카드 */
+    .book-list { display: flex; flex-direction: column; gap: 12px; }
+    .book-card {
+      background: var(--bg);
+      border: 0.5px solid var(--border);
+      border-radius: var(--r-sm);
+      padding: 16px 18px;
+      display: flex;
+      gap: 14px;
+      align-items: flex-start;
+      transition: all var(--t);
+    }
+    .book-card:hover { border-color: var(--sora-l); transform: translateX(3px); }
+    .book-icon { font-size: 22px; color: var(--sora); flex-shrink: 0; margin-top: 2px; }
+    .book-title { font-size: 13px; font-weight: 500; color: var(--title); margin-bottom: 3px; line-height: 1.5; }
+    .book-desc  { font-size: 12px; color: var(--sub); }
+    .book-tag   { display: inline-block; font-size: 10px; font-weight: 500; background: #FFF0E6; color: #A0540A; padding: 2px 8px; border-radius: var(--r-pill); margin-top: 5px; }
+
+    /* 연구회 아코디언 */
+    .community-list { display: flex; flex-direction: column; gap: 10px; }
+    .community-card {
+      background: var(--bg);
+      border: 0.5px solid var(--border);
+      border-radius: var(--r-sm);
+      overflow: hidden;
+      transition: border-color var(--t);
+    }
+    .community-card:hover { border-color: var(--sora-l); }
+    .community-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 14px 18px;
+      cursor: pointer;
+      user-select: none;
+      gap: 12px;
+    }
+    .community-header-left { display: flex; align-items: center; gap: 10px; }
+    .community-year-badge {
+      font-size: 10px; font-weight: 500;
+      background: var(--sora-l); color: var(--sora-d);
+      padding: 2px 9px; border-radius: var(--r-pill);
+      white-space: nowrap;
+    }
+    .community-name { font-size: 13px; font-weight: 500; color: var(--title); }
+    .community-toggle { font-size: 12px; color: var(--muted); transition: transform var(--t); flex-shrink: 0; }
+    .community-card.open .community-toggle { transform: rotate(180deg); }
+    .community-body {
+      display: none;
+      padding: 16px 18px 16px;
+      font-size: 12px;
+      color: var(--sub);
+      line-height: 1.8;
+      border-top: 0.5px solid var(--border);
+    }
+    .community-card.open .community-body { display: block; }
+    .community-body ul { padding-left: 16px; list-style: disc; }
+    .community-body li { margin-bottom: 4px; }
+    .community-body a { color: var(--sora-d); }
+    .community-body a:hover { text-decoration: underline; }
+
+    /* 강의 칩 */
+    .lecture-chips { display: flex; flex-wrap: wrap; gap: 8px; }
+    .lecture-chip {
+      display: flex; align-items: center; gap: 7px;
+      font-size: 12px; font-weight: 500;
+      background: var(--surface);
+      border: 0.5px solid var(--border);
+      color: var(--sub);
+      padding: 7px 14px;
+      border-radius: var(--r-pill);
+      transition: all var(--t);
+    }
+    .lecture-chip:hover { border-color: var(--sora); color: var(--sora-d); background: var(--sora-l); }
+    .lecture-chip i { color: var(--sora); font-size: 12px; }
+
+    /* 2열 레이아웃 */
+    .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 48px; }
+
+    @media (max-width: 860px) {
+      .profile-wrap { grid-template-columns: 1fr; gap: 28px; }
+      .profile-img { width: 120px; aspect-ratio: 1; font-size: 42px; }
+      .two-col { grid-template-columns: 1fr; gap: 32px; }
+    }
+  </style>
+</head>
+<body class="page-top">
+
+  <nav class="nav" id="nav">
+    <div class="nav-inner">
+      <a href="index.html" class="nav-logo">이하얀 <span>archive</span></a>
+      <ul class="nav-links">
+        <li><a href="index.html">홈</a></li>
+        <li><a href="lessons/index.html">수업자료</a></li>
+        <li><a href="works/index.html">우수작</a></li>
+        <li><a href="portfolio/index.html">포트폴리오</a></li>
+        <li><a href="about.html" class="active">소개</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <div class="page-hero">
+    <div class="container">
+      <div class="page-hero-eyebrow fade-up">소개</div>
+      <h1 class="page-hero-title fade-up" style="transition-delay:.08s">About</h1>
+      <p class="page-hero-desc fade-up" style="transition-delay:.16s">
+        디자인을 가르치고, 기록하고, 함께 성장합니다.
+      </p>
+    </div>
+  </div>
+
+  <section class="section">
+    <div class="container">
+
+      <!-- 프로필 -->
+      <div class="profile-wrap fade-up">
+        <div class="profile-img">
+          <!--
+            프로필 사진 교체:
+            <img src="images/portfolio/profile.jpg" alt="이하얀"
+                 style="width:100%;height:100%;object-fit:cover;border-radius:12px">
+          -->
+          <i class="fa-solid fa-user"></i>
+        </div>
+        <div>
+          <div class="profile-name">이하얀</div>
+          <div class="profile-sub">마이스터고 디자인과 교사 · 10년차 · AI 융합교육 연구자</div>
+          <p class="profile-desc">
+            경희대학교 시각디자인학과를 졸업하고, 숙명여자대학교 교육대학원에서<br>
+            AI융합교육학을 전공했습니다. 디자인 교육과 에듀테크의 접점에서<br>
+            더 나은 수업을 만들기 위해 연구하고 기록합니다.
+          </p>
+          <div class="profile-contact">
+            <div class="contact-row">
+              <i class="fa-solid fa-envelope"></i>
+              <span>이메일: <a href="mailto:your@email.com">your@email.com</a></span>
+            </div>
+            <div class="contact-row">
+              <i class="fa-solid fa-school"></i>
+              <span>마이스터고등학교 디자인과</span>
+            </div>
+            <div class="contact-row">
+              <i class="fa-solid fa-microphone"></i>
+              <span>강의 문의 환영 — AI 그래픽, 에듀테크, 교과융합, 글로벌 교육 사례</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 학력 + 경력 -->
+      <div class="about-section two-col fade-up">
+        <div>
+          <div class="about-section-title">
+            <i class="fa-solid fa-graduation-cap"></i> 학력
+          </div>
+          <div class="timeline">
+            <div class="tl-item">
+              <div class="tl-year">석사 졸업</div>
+              <div class="tl-title">숙명여자대학교 교육대학원</div>
+              <div class="tl-desc">AI융합교육학과</div>
+            </div>
+            <div class="tl-item">
+              <div class="tl-year">학사 졸업</div>
+              <div class="tl-title">경희대학교</div>
+              <div class="tl-desc">시각디자인학과</div>
+            </div>
+          </div>
+        </div>
+        <div>
+          <div class="about-section-title">
+            <i class="fa-solid fa-briefcase"></i> 주요 경력
+          </div>
+          <div class="timeline">
+            <div class="tl-item">
+              <div class="tl-year">2026.04 ~ (예정)</div>
+              <div class="tl-title">골든래빗 도서 출간 예정</div>
+              <div class="tl-desc">『NEXT_에듀테크_with_Gemini — 선생님을 위한 바이브코딩』</div>
+            </div>
+            <div class="tl-item">
+              <div class="tl-year">2024.05 ~</div>
+              <div class="tl-title">서울 에듀테크 소프트랩 실증교사단</div>
+              <div class="tl-desc">디자인 부문 자문위원, 에듀프러너 해커톤 참여</div>
+            </div>
+            <div class="tl-item">
+              <div class="tl-year">2024.04.19</div>
+              <div class="tl-title">제9회 AI융합교육 전문가 포럼 발표</div>
+              <div class="tl-desc">특성화 고등학교의 AI융합교육 사례 발표</div>
+              <a href="https://ed.sookmyung.ac.kr/bbs/ed/158/203545/artclView.do"
+                 target="_blank" class="tl-link">
+                포럼 뉴스 보기 <i class="fa-solid fa-arrow-up-right-from-square" style="font-size:10px"></i>
+              </a>
+            </div>
+            <div class="tl-item">
+              <div class="tl-year">2016 ~ 현재</div>
+              <div class="tl-title">마이스터고등학교 디자인과 교사</div>
+              <div class="tl-desc">시각디자인, UI·UX, 색채, 광고콘텐츠 담당</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 수상 -->
+      <div class="about-section fade-up">
+        <div class="about-section-title">
+          <i class="fa-solid fa-trophy"></i> 수상 및 표창
+        </div>
+        <div class="award-list">
+          <div class="award-card">
+            <div class="award-year">2024</div>
+            <div class="award-title">제9회 AI융합교육 전문가 포럼 및 수업사례 공모전<br>PDA프로젝트 AI융합교육부문 최우수</div>
+            <div><span class="award-badge">교육부장관상</span></div>
+            <div style="margin-top:6px">
+              <a href="https://aied.dnue.ac.kr/aied/CMS/Board/Board.do?mCode=MN021&page=2&mgr_seq=402&mode=view&mgr_seq=402&board_seq=14267"
+                 target="_blank" class="tl-link">
+                공모전 수상 결과 보기 <i class="fa-solid fa-arrow-up-right-from-square" style="font-size:10px"></i>
+              </a>
+            </div>
+          </div>
+          <div class="award-card">
+            <div class="award-year">2023.12</div>
+            <div class="award-title">학교 기후 환경교육 콘텐츠 개발 — 교사학습공동체 CSL 우수콘텐츠 선정</div>
+            <div><span class="award-badge">교육부장관상</span></div>
+          </div>
+          <div class="award-card">
+            <div class="award-year">2023.03</div>
+            <div class="award-title">㈜미래엔 목정미래재단 제9회 미래교육연구<br>에듀테크 기술을 활용한 혁신수업사례</div>
+            <div><span class="award-badge">장려상</span></div>
+            <div style="margin-top:6px">
+              <a href="http://edu.donga.com/?p=article&ps=view&at_no=20230321111132738209"
+                 target="_blank" class="tl-link">
+                수상 기사 보기 <i class="fa-solid fa-arrow-up-right-from-square" style="font-size:10px"></i>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 집필 -->
+      <div class="about-section fade-up">
+        <div class="about-section-title">
+          <i class="fa-solid fa-book-open"></i> 집필 · 연구
+        </div>
+        <div class="book-list">
+          <div class="book-card">
+            <div class="book-icon"><i class="fa-solid fa-book"></i></div>
+            <div>
+              <div class="book-title">『NEXT_에듀테크_with_Gemini — 선생님을 위한 바이브코딩』</div>
+              <div class="book-desc">골든래빗 출판 · 교사 에듀테크 활용서</div>
+              <span class="book-tag">2026 출간 예정</span>
+            </div>
+          </div>
+          <div class="book-card">
+            <div class="book-icon"><i class="fa-solid fa-globe"></i></div>
+            <div>
+              <div class="book-title">글로벌 소프트웨어 활용 교육 가이드 및 사례집<br>『짧은 순간의 행복, 그러나 영원히 기억할 행복』</div>
+              <div class="book-desc">NCS교원학습공동체 교과융합수업연구회 집필</div>
+              <span class="book-tag">2023</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 교사학습공동체 -->
+      <div class="about-section fade-up">
+        <div class="about-section-title">
+          <i class="fa-solid fa-people-group"></i> 교사학습공동체 · 연구회
+        </div>
+        <div class="community-list">
+
+          <div class="community-card open">
+            <div class="community-header">
+              <div class="community-header-left">
+                <span class="community-year-badge">2024</span>
+                <span class="community-name">서울 에듀테크 소프트랩 실증교사단</span>
+              </div>
+              <i class="fa-solid fa-chevron-down community-toggle"></i>
+            </div>
+            <div class="community-body">
+              <ul>
+                <li>소프트랩 디자인 부문 자문위원</li>
+                <li>에듀프러너 해커톤 참여</li>
+                <li>실증기업–교사 매칭데이 참여</li>
+                <li>㈜아이포트폴리오 리딩앤 AI코스웨어 실증 진행</li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="community-card">
+            <div class="community-header">
+              <div class="community-header-left">
+                <span class="community-year-badge">2024</span>
+                <span class="community-name">인공지능 융합교육대학원 교사연구회 AI-E랩</span>
+              </div>
+              <i class="fa-solid fa-chevron-down community-toggle"></i>
+            </div>
+            <div class="community-body">
+              <ul>
+                <li>숙명여자대학교 교육대학원 AI융합교육 연구</li>
+                <li>AI-Education Lab. (AI-E랩) 활동</li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="community-card">
+            <div class="community-header">
+              <div class="community-header-left">
+                <span class="community-year-badge">2023</span>
+                <span class="community-name">교사학습공동체 CSL (Creative Space Lab)</span>
+              </div>
+              <i class="fa-solid fa-chevron-down community-toggle"></i>
+            </div>
+            <div class="community-body">
+              <ul>
+                <li>과학·국어·디자인 교과융합수업 프로젝트</li>
+                <li>유네스코 다문화가정 대상국가와의 교육교류사업 참여</li>
+                <li>인도네시아 SMKS Mutiara Baru 글로벌 교육 교류 활동</li>
+                <li>2023 학교 기후 환경교육 콘텐츠 개발 — 교육부장관상 수상</li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="community-card">
+            <div class="community-header">
+              <div class="community-header-left">
+                <span class="community-year-badge">2016–2023</span>
+                <span class="community-name">NCS교원학습공동체 교과융합수업연구회</span>
+              </div>
+              <i class="fa-solid fa-chevron-down community-toggle"></i>
+            </div>
+            <div class="community-body">
+              <ul>
+                <li>국어·디자인 교과융합 프로젝트 운영</li>
+                <li>태국 Minburi Technical College–한국 글로벌 교육 교류활동 디자인 수업 진행</li>
+                <li>글로벌 소프트웨어 활용 교육 가이드 및 사례집 집필</li>
+                <li>제9회 목정미래재단 미래교육연구분야 장려상 수상</li>
+              </ul>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- 강의 가능 분야 -->
+      <div class="about-section fade-up">
+        <div class="about-section-title">
+          <i class="fa-solid fa-microphone-lines"></i> 강의 가능 분야
+        </div>
+        <div class="lecture-chips">
+          <span class="lecture-chip"><i class="fa-solid fa-robot"></i> AI 그래픽 프로그램 활용</span>
+          <span class="lecture-chip"><i class="fa-solid fa-wand-magic-sparkles"></i> Adobe Photoshop AI</span>
+          <span class="lecture-chip"><i class="fa-solid fa-mobile-screen"></i> Uizard 등 에듀테크 도구</span>
+          <span class="lecture-chip"><i class="fa-solid fa-globe"></i> 글로벌 교육 사례</span>
+          <span class="lecture-chip"><i class="fa-solid fa-diagram-project"></i> 교과융합 프로젝트</span>
+          <span class="lecture-chip"><i class="fa-solid fa-brain"></i> AI 교과융합 프로젝트</span>
+          <span class="lecture-chip"><i class="fa-solid fa-laptop-code"></i> 에듀테크 수업 설계</span>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <footer class="footer">
+    <div class="footer-inner">
+      <div class="footer-logo">이하얀 <span>archive</span></div>
+      <div class="footer-copy">© 2026 이하얀 · 마이스터고 디자인과 수업 아카이브</div>
+    </div>
+  </footer>
+
+  <button class="scroll-top" id="scrollTop" aria-label="맨 위로">
+    <i class="fa-solid fa-chevron-up"></i>
+  </button>
+
+  <script src="js/main.js"></script>
+  <script>
+    /* 연구회 아코디언 */
+    document.querySelectorAll('.community-header').forEach(header => {
+      header.addEventListener('click', () => {
+        header.closest('.community-card').classList.toggle('open');
+      });
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>포트폴리오 — 이하얀 archive</title>
+  <link rel="stylesheet" href="../css/style.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <style>
+    .section { padding: 56px 0 80px; }
+
+    .portfolio-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 20px;
+    }
+
+    /* 대표작 — 상단 2열 전체 */
+    .portfolio-card.featured {
+      grid-column: 1 / -1;
+      display: grid;
+      grid-template-columns: 1.2fr 1fr;
+    }
+    .portfolio-card.featured .portfolio-thumb {
+      aspect-ratio: auto;
+      min-height: 240px;
+    }
+
+    /* 공통 카드 */
+    .portfolio-card {
+      background: var(--bg);
+      border: 0.5px solid var(--border);
+      border-radius: var(--r-md);
+      overflow: hidden;
+      transition: all var(--t);
+    }
+    .portfolio-card:hover {
+      border-color: var(--sora-l);
+      box-shadow: 0 4px 24px rgba(127,179,200,0.12);
+      transform: translateY(-2px);
+    }
+    /* 링크형 카드 */
+    a.portfolio-card { display: block; cursor: pointer; }
+
+    .portfolio-thumb {
+      aspect-ratio: 16/10;
+      background: var(--card-bg);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      transition: background var(--t);
+    }
+    .portfolio-card:hover .portfolio-thumb { background: var(--sora-l); }
+    .portfolio-thumb img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.4s ease; }
+    .portfolio-card:hover .portfolio-thumb img { transform: scale(1.04); }
+    .portfolio-thumb-icon { font-size: 40px; color: var(--muted); transition: color var(--t); }
+    .portfolio-card:hover .portfolio-thumb-icon { color: var(--sora-d); }
+
+    .portfolio-body {
+      padding: 20px 22px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+    .portfolio-year {
+      font-size: 11px; font-weight: 500;
+      color: var(--sora-d); letter-spacing: .06em; margin-bottom: 7px;
+    }
+    .portfolio-title {
+      font-size: 16px; font-weight: 600;
+      color: var(--title); margin-bottom: 7px; line-height: 1.4;
+    }
+    .portfolio-desc {
+      font-size: 12px; color: var(--sub);
+      line-height: 1.75; margin-bottom: 14px;
+    }
+    .portfolio-tags { display: flex; gap: 5px; flex-wrap: wrap; }
+    .portfolio-more {
+      font-size: 11px; font-weight: 500;
+      color: var(--sora); margin-top: 12px;
+      transition: gap var(--t);
+      display: inline-flex; align-items: center; gap: 4px;
+    }
+    a.portfolio-card:hover .portfolio-more { gap: 7px; }
+
+    @media (max-width: 768px) {
+      .portfolio-grid { grid-template-columns: 1fr; }
+      .portfolio-card.featured {
+        grid-column: auto;
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body class="page-top">
+
+  <nav class="nav" id="nav">
+    <div class="nav-inner">
+      <a href="../index.html" class="nav-logo">이하얀 <span>archive</span></a>
+      <ul class="nav-links">
+        <li><a href="../index.html">홈</a></li>
+        <li><a href="../lessons/index.html">수업자료</a></li>
+        <li><a href="../works/index.html">우수작</a></li>
+        <li><a href="index.html" class="active">포트폴리오</a></li>
+        <li><a href="../about.html">소개</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <div class="page-hero">
+    <div class="container">
+      <div class="page-hero-eyebrow fade-up">포트폴리오</div>
+      <h1 class="page-hero-title fade-up" style="transition-delay:.08s">Portfolio</h1>
+      <p class="page-hero-desc fade-up" style="transition-delay:.16s">
+        교사 이하얀의 작품과 프로젝트 모음입니다.<br>
+        디자인 교육과 함께 꾸준히 이어온 창작 작업을 담았습니다.
+      </p>
+    </div>
+  </div>
+
+  <section class="section">
+    <div class="container">
+      <div class="portfolio-grid">
+
+        <!-- 대표작: 2열 전체 차지 -->
+        <div class="portfolio-card featured fade-up">
+          <div class="portfolio-thumb">
+            <i class="fa-solid fa-book portfolio-thumb-icon"></i>
+          </div>
+          <div class="portfolio-body">
+            <div class="portfolio-year">2026 · 출간 예정 · 대표 작업</div>
+            <div class="portfolio-title">『NEXT_에듀테크_with_Gemini』<br>선생님을 위한 바이브코딩</div>
+            <div class="portfolio-desc">
+              골든래빗 출판사에서 출간 예정인 교사 에듀테크 활용서입니다.<br>
+              Gemini AI를 활용한 수업 설계, 바이브코딩 기법을 비개발자 교사 눈높이로 안내합니다.
+            </div>
+            <div class="portfolio-tags">
+              <span class="tag tag-sora">에듀테크</span>
+              <span class="tag tag-sora">AI</span>
+              <span class="tag">집필</span>
+              <span class="tag">골든래빗</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- UNIVASSIST → 새 탭 상세 페이지 -->
+        <a href="univassist.html" target="_blank" rel="noopener noreferrer"
+           class="portfolio-card fade-up" style="transition-delay:.08s">
+          <div class="portfolio-thumb">
+            <i class="fa-solid fa-universal-access portfolio-thumb-icon"></i>
+          </div>
+          <div class="portfolio-body">
+            <div class="portfolio-year">2024 · 석사논문 연계 프로젝트</div>
+            <div class="portfolio-title">UNIVASSIST</div>
+            <div class="portfolio-desc">AI 기반 유니버설 디자인 시스템 생성 도구. WCAG 2.1 기준 컬러시스템 자동 생성 및 색각 이상 시뮬레이션 지원.</div>
+            <div class="portfolio-tags">
+              <span class="tag tag-sora">유니버설 디자인</span>
+              <span class="tag tag-sora">AI</span>
+              <span class="tag">웹앱</span>
+              <span class="tag">접근성</span>
+            </div>
+            <span class="portfolio-more">자세히 보기 <i class="fa-solid fa-arrow-right" style="font-size:10px"></i></span>
+          </div>
+        </a>
+
+        <!-- 학교 BI 리뉴얼 -->
+        <div class="portfolio-card fade-up" style="transition-delay:.16s">
+          <div class="portfolio-thumb">
+            <i class="fa-solid fa-diagram-project portfolio-thumb-icon"></i>
+          </div>
+          <div class="portfolio-body">
+            <div class="portfolio-year">2024</div>
+            <div class="portfolio-title">학교 BI 리뉴얼 프로젝트</div>
+            <div class="portfolio-desc">마이스터고 브랜드 아이덴티티 리뉴얼 설계 및 매뉴얼 제작</div>
+            <div class="portfolio-tags">
+              <span class="tag">브랜딩</span>
+              <span class="tag">Illustrator</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- 졸업전시 도록 -->
+        <div class="portfolio-card fade-up" style="transition-delay:.24s">
+          <div class="portfolio-thumb">
+            <i class="fa-solid fa-graduation-cap portfolio-thumb-icon"></i>
+          </div>
+          <div class="portfolio-body">
+            <div class="portfolio-year">2023</div>
+            <div class="portfolio-title">졸업전시 도록 편집 디자인</div>
+            <div class="portfolio-desc">학생 작품 150점을 담은 졸업전시 도록 기획·편집 디자인</div>
+            <div class="portfolio-tags">
+              <span class="tag">편집디자인</span>
+              <span class="tag">InDesign</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- AI 수업 설계 사례집 -->
+        <div class="portfolio-card fade-up" style="transition-delay:.32s">
+          <div class="portfolio-thumb">
+            <i class="fa-solid fa-robot portfolio-thumb-icon"></i>
+          </div>
+          <div class="portfolio-body">
+            <div class="portfolio-year">2025</div>
+            <div class="portfolio-title">AI 활용 수업 설계 사례집</div>
+            <div class="portfolio-desc">ChatGPT·Midjourney를 활용한 디자인 수업 모델 개발 및 사례 정리</div>
+            <div class="portfolio-tags">
+              <span class="tag tag-sora">AI</span>
+              <span class="tag">교육</span>
+              <span class="tag">연구</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <footer class="footer">
+    <div class="footer-inner">
+      <div class="footer-logo">이하얀 <span>archive</span></div>
+      <div class="footer-copy">© 2026 이하얀 · 마이스터고 디자인과 수업 아카이브</div>
+    </div>
+  </footer>
+
+  <button class="scroll-top" id="scrollTop" aria-label="맨 위로">
+    <i class="fa-solid fa-chevron-up"></i>
+  </button>
+
+  <script src="../js/main.js"></script>
+</body>
+</html>

@@ -1,0 +1,482 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>이하얀 archive</title>
+  <link rel="stylesheet" href="css/style.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <style>
+    /* ── 홈 전용 스타일 ── */
+
+    /* 히어로 */
+    .hero {
+      padding: calc(var(--nav-h) + 80px) 0 80px;
+      background: var(--bg);
+    }
+    .hero-inner {
+      max-width: var(--max-w);
+      margin: 0 auto;
+      padding: 0 40px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 72px;
+      align-items: center;
+    }
+    .hero-eyebrow {
+      font-size: 11px;
+      font-weight: 500;
+      color: var(--sora-d);
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      margin-bottom: 18px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      opacity: 0;
+      animation: fadeUp 0.5s ease forwards 0.1s;
+    }
+    .hero-eyebrow::before {
+      content: '';
+      width: 22px; height: 1.5px;
+      background: var(--sora);
+      border-radius: 1px;
+    }
+    .hero-title {
+      font-size: 42px;
+      font-weight: 600;
+      color: var(--title);
+      line-height: 1.22;
+      letter-spacing: -0.025em;
+      margin-bottom: 18px;
+      opacity: 0;
+      animation: fadeUp 0.5s ease forwards 0.2s;
+    }
+    .hero-title em {
+      font-style: normal;
+      color: var(--sora-d);
+    }
+    .hero-desc {
+      font-size: 14px;
+      color: var(--sub);
+      line-height: 1.85;
+      margin-bottom: 32px;
+      opacity: 0;
+      animation: fadeUp 0.5s ease forwards 0.3s;
+    }
+    .hero-actions {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      opacity: 0;
+      animation: fadeUp 0.5s ease forwards 0.4s;
+    }
+    /* 히어로 카드 스택 */
+    .hero-visual {
+      opacity: 0;
+      animation: fadeUp 0.6s ease forwards 0.35s;
+    }
+    .card-stack {
+      position: relative;
+      height: 300px;
+    }
+    .stack-card {
+      position: absolute;
+      width: 230px;
+      background: var(--bg);
+      border: 0.5px solid var(--border);
+      border-radius: var(--r-md);
+      padding: 18px 20px;
+    }
+    .stack-card:nth-child(1) { top: 0; right: 30px; transform: rotate(3deg); background: var(--surface); }
+    .stack-card:nth-child(2) { top: 60px; right: 0; transform: rotate(-1.5deg); z-index: 2; }
+    .stack-card:nth-child(3) { top: 124px; right: 44px; transform: rotate(1deg); background: var(--sora-l); border-color: var(--sora); z-index: 1; }
+    .sc-subject {
+      font-size: 10px;
+      color: var(--muted);
+      font-weight: 500;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      margin-bottom: 6px;
+    }
+    .sc-title {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--title);
+      line-height: 1.4;
+      margin-bottom: 10px;
+    }
+    .sc-bar-wrap { height: 3px; background: var(--card-bg); border-radius: 2px; margin-bottom: 5px; }
+    .sc-bar { height: 3px; background: var(--sora); border-radius: 2px; }
+    .sc-meta { display: flex; justify-content: space-between; font-size: 10px; color: var(--muted); }
+
+    /* 통계 띠 */
+    .stats-strip {
+      background: var(--surface);
+      border-top: 0.5px solid var(--border);
+      border-bottom: 0.5px solid var(--border);
+      padding: 32px 0;
+    }
+    .stats-inner {
+      max-width: var(--max-w);
+      margin: 0 auto;
+      padding: 0 40px;
+      display: flex;
+    }
+    .stat-item {
+      flex: 1;
+      text-align: center;
+      border-right: 0.5px solid var(--border);
+      padding: 0 16px;
+    }
+    .stat-item:last-child { border-right: none; }
+    .stat-num {
+      font-size: 30px;
+      font-weight: 600;
+      color: var(--title);
+      line-height: 1;
+      margin-bottom: 5px;
+    }
+    .stat-label { font-size: 12px; color: var(--muted); }
+
+    /* 섹션 */
+    .section { padding: 72px 0; }
+    .section-bg { background: var(--surface); border-top: 0.5px solid var(--border); border-bottom: 0.5px solid var(--border); }
+
+    /* 과목 카드 */
+    .subject-card {
+      background: var(--bg);
+      border: 0.5px solid var(--border);
+      border-radius: var(--r-md);
+      padding: 24px;
+      transition: all var(--t);
+      position: relative;
+      overflow: hidden;
+      display: block;
+    }
+    .subject-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 2px;
+      background: var(--sora);
+      transform: scaleX(0);
+      transform-origin: left;
+      transition: transform var(--t);
+    }
+    .subject-card:hover { border-color: var(--sora-l); box-shadow: 0 4px 24px rgba(127,179,200,0.12); transform: translateY(-2px); }
+    .subject-card:hover::before { transform: scaleX(1); }
+    .subject-icon {
+      width: 42px; height: 42px;
+      background: var(--sora-l);
+      border-radius: var(--r-sm);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 18px;
+      color: var(--sora-d);
+      margin-bottom: 14px;
+      transition: all var(--t);
+    }
+    .subject-card:hover .subject-icon { background: var(--sora); color: #fff; }
+    .subject-name { font-size: 15px; font-weight: 600; color: var(--title); margin-bottom: 4px; }
+    .subject-desc { font-size: 12px; color: var(--sub); line-height: 1.65; margin-bottom: 16px; }
+    .subject-foot { display: flex; justify-content: space-between; align-items: center; }
+    .subject-count { font-size: 11px; color: var(--muted); }
+    .subject-count strong { color: var(--sora-d); font-weight: 600; }
+    .subject-go { font-size: 11px; color: var(--sora); font-weight: 500; }
+    .subject-bar-track { height: 2px; background: var(--card-bg); border-radius: 2px; margin-top: 14px; }
+    .subject-bar { height: 2px; background: var(--sora); border-radius: 2px; width: 0; transition: width 0.9s ease; }
+
+    /* About 미니 카드 */
+    .about-inner {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 60px;
+      align-items: center;
+    }
+    .about-label {
+      font-size: 11px;
+      font-weight: 500;
+      color: var(--sora-d);
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      margin-bottom: 12px;
+    }
+    .about-title { font-size: 26px; font-weight: 600; color: var(--title); line-height: 1.35; margin-bottom: 14px; }
+    .about-desc { font-size: 13px; color: var(--sub); line-height: 1.9; margin-bottom: 22px; }
+    .about-chips { display: flex; gap: 8px; flex-wrap: wrap; }
+    .chip { font-size: 11px; font-weight: 500; padding: 5px 13px; border-radius: var(--r-pill); }
+    .chip-sora { background: var(--sora-l); color: var(--sora-d); }
+    .chip-outline { border: 0.5px solid var(--border); color: var(--sub); }
+    .mini-cards { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    .mini-card {
+      background: var(--bg);
+      border: 0.5px solid var(--border);
+      border-radius: var(--r-sm);
+      padding: 16px;
+      transition: all var(--t);
+    }
+    .mini-card:hover { border-color: var(--sora-l); transform: translateY(-2px); }
+    .mc-icon { font-size: 16px; color: var(--sora); margin-bottom: 8px; }
+    .mc-title { font-size: 12px; font-weight: 600; color: var(--title); margin-bottom: 3px; }
+    .mc-desc { font-size: 11px; color: var(--muted); line-height: 1.5; }
+
+    @keyframes fadeUp {
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @media (max-width: 860px) {
+      .hero-inner { grid-template-columns: 1fr; gap: 40px; }
+      .hero-title { font-size: 30px; }
+      .hero-visual { display: none; }
+      .about-inner { grid-template-columns: 1fr; gap: 32px; }
+    }
+  </style>
+</head>
+<body class="page-top">
+
+  <!-- NAV -->
+  <nav class="nav" id="nav">
+    <div class="nav-inner">
+      <a href="index.html" class="nav-logo">이하얀 <span>archive</span></a>
+      <ul class="nav-links">
+        <li><a href="index.html" class="active">홈</a></li>
+        <li><a href="lessons/index.html">수업자료</a></li>
+        <li><a href="works/index.html">우수작</a></li>
+        <li><a href="portfolio/index.html">포트폴리오</a></li>
+        <li><a href="about.html">소개</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-inner">
+      <div>
+        <div class="hero-eyebrow">2026 Archive</div>
+        <h1 class="hero-title">수업을 기록하고<br><em>함께 성장합니다</em></h1>
+        <p class="hero-desc">
+          마이스터고 디자인과 수업 자료, 학생 작품,<br>
+          교육 기록을 한 곳에 담아둡니다.<br>
+          기록이 쌓일수록 우리의 수업도 깊어집니다.
+        </p>
+        <div class="hero-actions">
+          <a href="lessons/index.html" class="btn btn-primary">
+            수업자료 보기 <i class="fa-solid fa-arrow-right" style="font-size:11px"></i>
+          </a>
+          <a href="about.html" class="btn btn-outline">교사 소개</a>
+        </div>
+      </div>
+      <div class="hero-visual">
+        <div class="card-stack">
+          <div class="stack-card">
+            <div class="sc-subject">스마트문화앱콘텐츠제작</div>
+            <div class="sc-title">앱 UI 와이어프레임 기초</div>
+            <div class="sc-bar-wrap"><div class="sc-bar" style="width:70%"></div></div>
+            <div class="sc-meta"><span>2026 · 1학년</span></div>
+          </div>
+          <div class="stack-card">
+            <div class="sc-subject">UI/UX 엔지니어링</div>
+            <div class="sc-title">사용자 경험 설계 원리</div>
+            <div class="sc-bar-wrap"><div class="sc-bar" style="width:55%"></div></div>
+            <div class="sc-meta"><span>2026 · 2학년</span></div>
+          </div>
+          <div class="stack-card">
+            <div class="sc-subject">색채디자인</div>
+            <div class="sc-title">색의 3속성과 배색 이론</div>
+            <div class="sc-bar-wrap"><div class="sc-bar" style="width:40%"></div></div>
+            <div class="sc-meta"><span>2026 · 3학년</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- STATS -->
+  <div class="stats-strip">
+    <div class="stats-inner">
+      <div class="stat-item fade-up">
+        <div class="stat-num" data-count="10" data-suffix="년차">0년차</div>
+        <div class="stat-label">교직 경력</div>
+      </div>
+      <div class="stat-item fade-up" style="transition-delay:.08s">
+        <div class="stat-num" data-count="4" data-suffix="개">0개</div>
+        <div class="stat-label">2026 담당 과목</div>
+      </div>
+      <div class="stat-item fade-up" style="transition-delay:.16s">
+        <div class="stat-num" data-count="38" data-suffix="개">0개</div>
+        <div class="stat-label">수업자료 아카이브</div>
+      </div>
+      <div class="stat-item fade-up" style="transition-delay:.24s">
+        <div class="stat-num" data-count="120" data-suffix="점+">0점+</div>
+        <div class="stat-label">학생 우수작</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 2026 과목 -->
+  <section class="section">
+    <div class="container">
+      <div class="section-header fade-up">
+        <div class="section-title">2026년도 담당 과목 <small>THIS YEAR SUBJECTS</small></div>
+        <a href="lessons/index.html" class="section-more">전체 수업자료 <i class="fa-solid fa-arrow-right" style="font-size:10px"></i></a>
+      </div>
+      <div class="grid-2" style="grid-template-columns:repeat(2,1fr); gap:16px;">
+        <a href="lessons/index.html?subject=smartapp" class="subject-card fade-up">
+          <div class="subject-icon"><i class="fa-solid fa-mobile-screen"></i></div>
+          <div class="subject-name">스마트문화앱콘텐츠제작</div>
+          <div class="subject-desc">앱 UI 기획·디자인, 와이어프레임, 프로토타입 제작 실습</div>
+          <div class="subject-foot">
+            <div class="subject-count"><strong>1학년</strong> · 2026</div>
+            <div class="subject-go">보러가기 →</div>
+          </div>
+          <div class="subject-bar-track"><div class="subject-bar" data-width="65"></div></div>
+        </a>
+        <a href="lessons/index.html?subject=uiux" class="subject-card fade-up" style="transition-delay:.08s">
+          <div class="subject-icon"><i class="fa-solid fa-pen-ruler"></i></div>
+          <div class="subject-name">UI/UX 엔지니어링</div>
+          <div class="subject-desc">사용자 경험 설계, 인터페이스 디자인, 웹·앱 프로토타이핑</div>
+          <div class="subject-foot">
+            <div class="subject-count"><strong>2학년</strong> · 2026</div>
+            <div class="subject-go">보러가기 →</div>
+          </div>
+          <div class="subject-bar-track"><div class="subject-bar" data-width="50"></div></div>
+        </a>
+        <a href="lessons/index.html?subject=adcontent" class="subject-card fade-up" style="transition-delay:.16s">
+          <div class="subject-icon"><i class="fa-solid fa-bullhorn"></i></div>
+          <div class="subject-name">광고콘텐츠 제작</div>
+          <div class="subject-desc">광고 기획, 비주얼 아이덴티티, 인쇄·디지털 매체 제작 실습</div>
+          <div class="subject-foot">
+            <div class="subject-count"><strong>3학년</strong> · 2026</div>
+            <div class="subject-go">보러가기 →</div>
+          </div>
+          <div class="subject-bar-track"><div class="subject-bar" data-width="42"></div></div>
+        </a>
+        <a href="lessons/index.html?subject=colordesign" class="subject-card fade-up" style="transition-delay:.24s">
+          <div class="subject-icon"><i class="fa-solid fa-palette"></i></div>
+          <div class="subject-name">색채디자인</div>
+          <div class="subject-desc">색의 3속성, 배색 이론, 색채 심리, 디지털·인쇄 색채 관리</div>
+          <div class="subject-foot">
+            <div class="subject-count"><strong>3학년</strong> · 2026</div>
+            <div class="subject-go">보러가기 →</div>
+          </div>
+          <div class="subject-bar-track"><div class="subject-bar" data-width="38"></div></div>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <hr class="divider" />
+
+  <!-- 최근 수업자료 -->
+  <section class="section">
+    <div class="container">
+      <div class="section-header fade-up">
+        <div class="section-title">최근 수업자료 <small>RECENT LESSONS</small></div>
+        <a href="lessons/index.html" class="section-more">전체 보기 <i class="fa-solid fa-arrow-right" style="font-size:10px"></i></a>
+      </div>
+      <div class="grid-4 fade-up">
+        <!-- 카드: 이미지가 있으면 img 태그 사용, 없으면 아이콘 표시 -->
+        <a href="lessons/2026-smartapp.html" class="archive-card">
+          <div class="card-thumb">
+            <!-- 이미지: <img src="../images/lessons/thumb-smartapp-01.jpg" alt="앱 UI 와이어프레임"> -->
+            <i class="fa-solid fa-mobile-screen card-thumb-icon"></i>
+          </div>
+          <div class="card-body">
+            <div class="card-tags"><span class="tag">1학년</span><span class="tag">실습</span></div>
+            <div class="card-title">01. 앱 UI 와이어프레임 기초 제작</div>
+            <div class="card-meta"><span>2026학년도</span><span class="card-arrow">상세보기 →</span></div>
+          </div>
+        </a>
+        <a href="lessons/2026-uiux.html" class="archive-card">
+          <div class="card-thumb">
+            <i class="fa-solid fa-pen-ruler card-thumb-icon"></i>
+          </div>
+          <div class="card-body">
+            <div class="card-tags"><span class="tag">2학년</span><span class="tag">이론</span></div>
+            <div class="card-title">01. 사용자 경험(UX) 설계 원리</div>
+            <div class="card-meta"><span>2026학년도</span><span class="card-arrow">상세보기 →</span></div>
+          </div>
+        </a>
+        <a href="lessons/2026-adcontent.html" class="archive-card">
+          <div class="card-thumb">
+            <i class="fa-solid fa-bullhorn card-thumb-icon"></i>
+          </div>
+          <div class="card-body">
+            <div class="card-tags"><span class="tag">3학년</span><span class="tag">기획</span></div>
+            <div class="card-title">01. 광고 기획서 작성과 크리에이티브 전략</div>
+            <div class="card-meta"><span>2026학년도</span><span class="card-arrow">상세보기 →</span></div>
+          </div>
+        </a>
+        <a href="lessons/2026-colordesign.html" class="archive-card">
+          <div class="card-thumb">
+            <i class="fa-solid fa-palette card-thumb-icon"></i>
+          </div>
+          <div class="card-body">
+            <div class="card-tags"><span class="tag">3학년</span><span class="tag">이론</span></div>
+            <div class="card-title">01. 색의 3속성과 먼셀 표색계 이해</div>
+            <div class="card-meta"><span>2026학년도</span><span class="card-arrow">상세보기 →</span></div>
+          </div>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ABOUT -->
+  <section class="section section-bg">
+    <div class="container">
+      <div class="about-inner">
+        <div class="fade-up">
+          <div class="about-label">About Teacher</div>
+          <div class="about-title">기록하는 교사,<br>성장하는 교실</div>
+          <p class="about-desc">
+            마이스터고 디자인과에서 10년째 학생들과 함께 디자인을 배우고 있습니다.<br>
+            수업의 과정과 결과를 꼼꼼히 기록하며, 더 나은 교육을 만들어갑니다.
+          </p>
+          <div class="about-chips">
+            <span class="chip chip-sora">디자인 교육</span>
+            <span class="chip chip-sora">유니버설 디자인</span>
+            <span class="chip chip-outline">AI 활용 수업</span>
+            <span class="chip chip-outline">마이스터고</span>
+          </div>
+        </div>
+        <div class="mini-cards fade-up" style="transition-delay:.15s">
+          <div class="mini-card">
+            <div class="mc-icon"><i class="fa-solid fa-book-open"></i></div>
+            <div class="mc-title">수업자료 아카이빙</div>
+            <div class="mc-desc">매 학기 수업 자료를 체계적으로 정리합니다.</div>
+          </div>
+          <div class="mini-card">
+            <div class="mc-icon"><i class="fa-solid fa-images"></i></div>
+            <div class="mc-title">학생 작품 기록</div>
+            <div class="mc-desc">선배들의 우수 작품을 분야별로 보관합니다.</div>
+          </div>
+          <div class="mini-card">
+            <div class="mc-icon"><i class="fa-solid fa-robot"></i></div>
+            <div class="mc-title">AI 활용 수업</div>
+            <div class="mc-desc">AI 도구를 접목한 디자인 교육을 실천합니다.</div>
+          </div>
+          <div class="mini-card">
+            <div class="mc-icon"><i class="fa-solid fa-envelope"></i></div>
+            <div class="mc-title">연락하기</div>
+            <div class="mc-desc">교육 문의는 소개 페이지 이메일로 주세요.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="footer-inner">
+      <div class="footer-logo">이하얀 <span>archive</span></div>
+      <div class="footer-copy">© 2026 이하얀 · 마이스터고 디자인과 수업 아카이브</div>
+    </div>
+  </footer>
+
+  <button class="scroll-top" id="scrollTop" aria-label="맨 위로">
+    <i class="fa-solid fa-chevron-up"></i>
+  </button>
+
+  <script src="js/main.js"></script>
+</body>
+</html>

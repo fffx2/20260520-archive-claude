@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>수업자료 — 이하얀 archive</title>
+  <link rel="stylesheet" href="../css/style.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <style>
+    .section { padding: 56px 0 80px; }
+    .controls {
+      display: flex;
+      align-items: flex-start;
+      gap: 20px;
+      flex-wrap: wrap;
+      margin-bottom: 32px;
+    }
+    .controls-left { flex: 1; min-width: 260px; }
+    /* 연도 필터 라벨 */
+    .filter-label {
+      font-size: 11px;
+      color: var(--muted);
+      font-weight: 500;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      margin-bottom: 8px;
+    }
+    /* 과목 카드 (수업자료 목록용) */
+    .lesson-card {
+      display: block;
+      background: var(--bg);
+      border: 0.5px solid var(--border);
+      border-radius: var(--r-md);
+      overflow: hidden;
+      transition: all var(--t);
+    }
+    .lesson-card:hover {
+      border-color: var(--sora-l);
+      box-shadow: 0 4px 20px rgba(127,179,200,0.12);
+      transform: translateY(-2px);
+    }
+    .lesson-thumb {
+      height: 160px;
+      background: var(--card-bg);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      transition: background var(--t);
+      position: relative;
+    }
+    .lesson-card:hover .lesson-thumb { background: var(--sora-l); }
+    .lesson-thumb img { width: 100%; height: 100%; object-fit: cover; }
+    .lesson-thumb-icon { font-size: 36px; color: var(--muted); transition: color var(--t); }
+    .lesson-card:hover .lesson-thumb-icon { color: var(--sora-d); }
+    .lesson-year-badge {
+      position: absolute;
+      top: 10px; right: 10px;
+      font-size: 10px;
+      font-weight: 500;
+      background: rgba(255,255,255,0.9);
+      color: var(--sora-d);
+      padding: 3px 9px;
+      border-radius: var(--r-pill);
+    }
+    .lesson-body { padding: 16px 18px; }
+    .lesson-subject {
+      font-size: 11px;
+      font-weight: 500;
+      color: var(--sora-d);
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      margin-bottom: 6px;
+    }
+    .lesson-title {
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--title);
+      margin-bottom: 6px;
+      line-height: 1.4;
+    }
+    .lesson-desc {
+      font-size: 12px;
+      color: var(--sub);
+      line-height: 1.6;
+      margin-bottom: 14px;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+    .lesson-foot {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .lesson-tags { display: flex; gap: 5px; }
+    .lesson-go { font-size: 11px; color: var(--sora); font-weight: 500; transition: transform var(--t); }
+    .lesson-card:hover .lesson-go { transform: translateX(3px); }
+    /* 검색 결과 카운트 */
+    .result-count {
+      font-size: 12px;
+      color: var(--muted);
+      margin-bottom: 20px;
+    }
+    .result-count strong { color: var(--sora-d); }
+  </style>
+</head>
+<body class="page-top">
+
+  <nav class="nav" id="nav">
+    <div class="nav-inner">
+      <a href="../index.html" class="nav-logo">이하얀 <span>archive</span></a>
+      <ul class="nav-links">
+        <li><a href="../index.html">홈</a></li>
+        <li><a href="index.html" class="active">수업자료</a></li>
+        <li><a href="../works/index.html">우수작</a></li>
+        <li><a href="../portfolio/index.html">포트폴리오</a></li>
+        <li><a href="../about.html">소개</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <!-- PAGE HERO -->
+  <div class="page-hero">
+    <div class="container">
+      <div class="page-hero-eyebrow fade-up">수업자료</div>
+      <h1 class="page-hero-title fade-up" style="transition-delay:.08s">Lesson Archive</h1>
+      <p class="page-hero-desc fade-up" style="transition-delay:.16s">
+        과목명으로 검색하거나 연도·분야 필터로 자료를 탐색할 수 있습니다.<br>
+        매 학기 새로운 수업자료가 추가됩니다.
+      </p>
+    </div>
+  </div>
+
+  <section class="section">
+    <div class="container">
+
+      <!-- 컨트롤 -->
+      <div class="controls fade-up">
+        <div class="controls-left">
+          <!-- 검색 -->
+          <div class="search-wrap" style="margin-bottom:16px">
+            <i class="fa-solid fa-magnifying-glass search-icon"></i>
+            <input
+              type="text"
+              id="searchInput"
+              class="search-input"
+              placeholder="과목명, 수업 주제로 검색..."
+              autocomplete="off"
+            />
+          </div>
+          <!-- 연도 필터 -->
+          <div class="filter-label">연도</div>
+          <div class="filter-bar" style="margin-bottom:0">
+            <button class="filter-btn active" data-filter="all" data-group="year" data-target=".lesson-card">전체</button>
+            <button class="filter-btn" data-filter="2026" data-group="year" data-target=".lesson-card">2026</button>
+            <button class="filter-btn" data-filter="2025" data-group="year" data-target=".lesson-card">2025</button>
+            <button class="filter-btn" data-filter="2024" data-group="year" data-target=".lesson-card">2024</button>
+          </div>
+        </div>
+        <div>
+          <!-- 학년 필터 -->
+          <div class="filter-label">학년</div>
+          <div class="filter-bar" style="margin-bottom:0">
+            <button class="filter-btn active" data-filter="all" data-group="grade" data-target=".lesson-card">전체</button>
+            <button class="filter-btn" data-filter="1" data-group="grade" data-target=".lesson-card">1학년</button>
+            <button class="filter-btn" data-filter="2" data-group="grade" data-target=".lesson-card">2학년</button>
+            <button class="filter-btn" data-filter="3" data-group="grade" data-target=".lesson-card">3학년</button>
+          </div>
+        </div>
+      </div>
+
+      <p class="result-count" id="resultCount">총 <strong>4</strong>개 과목</p>
+
+      <!-- 카드 그리드 -->
+      <!--
+        ★ 새 과목 추가 방법:
+           1. 아래 .lesson-card 블록을 복사
+           2. data-year, data-subject, data-grade 값 수정
+           3. href 를 해당 과목 HTML 파일 경로로 수정
+           4. 썸네일 이미지: img 태그의 src 를 images/lessons/thumb-[코드]-01.jpg 로 수정
+      -->
+      <div class="grid-3" id="lessonGrid">
+
+        <!-- 2026 스마트문화앱콘텐츠제작 -->
+        <a href="2026-smartapp.html"
+           class="lesson-card filter-item fade-up"
+           data-year="2026"
+           data-subject="smartapp"
+           data-grade="1">
+          <div class="lesson-thumb">
+            <!-- 이미지 추가 시: <img src="../images/lessons/thumb-smartapp-01.jpg" alt="스마트문화앱콘텐츠제작"> -->
+            <i class="fa-solid fa-mobile-screen lesson-thumb-icon"></i>
+            <div class="lesson-year-badge">2026</div>
+          </div>
+          <div class="lesson-body">
+            <div class="lesson-subject">스마트문화앱콘텐츠제작</div>
+            <div class="lesson-title">앱 UI 와이어프레임 기초</div>
+            <div class="lesson-desc">앱 화면 구조 설계, 와이어프레임 제작, 프로토타입 연결 실습</div>
+            <div class="lesson-foot">
+              <div class="lesson-tags">
+                <span class="tag">1학년</span>
+                <span class="tag">실습</span>
+              </div>
+              <span class="lesson-go">수업 보기 →</span>
+            </div>
+          </div>
+        </a>
+
+        <!-- 2026 UI/UX 엔지니어링 -->
+        <a href="2026-uiux.html"
+           class="lesson-card filter-item fade-up"
+           style="transition-delay:.08s"
+           data-year="2026"
+           data-subject="uiux"
+           data-grade="2">
+          <div class="lesson-thumb">
+            <i class="fa-solid fa-pen-ruler lesson-thumb-icon"></i>
+            <div class="lesson-year-badge">2026</div>
+          </div>
+          <div class="lesson-body">
+            <div class="lesson-subject">UI/UX 엔지니어링</div>
+            <div class="lesson-title">사용자 경험 설계 원리</div>
+            <div class="lesson-desc">UX 리서치, 정보 구조(IA) 설계, 사용성 평가 방법론 이해</div>
+            <div class="lesson-foot">
+              <div class="lesson-tags">
+                <span class="tag">2학년</span>
+                <span class="tag">이론+실습</span>
+              </div>
+              <span class="lesson-go">수업 보기 →</span>
+            </div>
+          </div>
+        </a>
+
+        <!-- 2026 광고콘텐츠 제작 -->
+        <a href="2026-adcontent.html"
+           class="lesson-card filter-item fade-up"
+           style="transition-delay:.16s"
+           data-year="2026"
+           data-subject="adcontent"
+           data-grade="3">
+          <div class="lesson-thumb">
+            <i class="fa-solid fa-bullhorn lesson-thumb-icon"></i>
+            <div class="lesson-year-badge">2026</div>
+          </div>
+          <div class="lesson-body">
+            <div class="lesson-subject">광고콘텐츠 제작</div>
+            <div class="lesson-title">광고 기획과 크리에이티브 전략</div>
+            <div class="lesson-desc">광고 기획서 작성, 타깃 분석, 비주얼 아이덴티티 제작 실습</div>
+            <div class="lesson-foot">
+              <div class="lesson-tags">
+                <span class="tag">3학년</span>
+                <span class="tag">기획</span>
+              </div>
+              <span class="lesson-go">수업 보기 →</span>
+            </div>
+          </div>
+        </a>
+
+        <!-- 2026 색채디자인 -->
+        <a href="2026-colordesign.html"
+           class="lesson-card filter-item fade-up"
+           style="transition-delay:.24s"
+           data-year="2026"
+           data-subject="colordesign"
+           data-grade="3">
+          <div class="lesson-thumb">
+            <i class="fa-solid fa-palette lesson-thumb-icon"></i>
+            <div class="lesson-year-badge">2026</div>
+          </div>
+          <div class="lesson-body">
+            <div class="lesson-subject">색채디자인</div>
+            <div class="lesson-title">색의 3속성과 배색 이론</div>
+            <div class="lesson-desc">먼셀 표색계, 색채 심리, 배색 원리, 디지털 색채 관리 실습</div>
+            <div class="lesson-foot">
+              <div class="lesson-tags">
+                <span class="tag">3학년</span>
+                <span class="tag">이론</span>
+              </div>
+              <span class="lesson-go">수업 보기 →</span>
+            </div>
+          </div>
+        </a>
+
+        <!--
+          ★ 내년도 과목 추가 예시 (복사해서 사용하세요):
+          <a href="2027-[과목코드].html"
+             class="lesson-card filter-item"
+             data-year="2027"
+             data-subject="[과목코드]"
+             data-grade="[1|2|3]">
+            <div class="lesson-thumb">
+              <i class="fa-solid fa-[아이콘] lesson-thumb-icon"></i>
+              <div class="lesson-year-badge">2027</div>
+            </div>
+            <div class="lesson-body">
+              <div class="lesson-subject">[과목명]</div>
+              <div class="lesson-title">[수업 제목]</div>
+              <div class="lesson-desc">[수업 설명]</div>
+              <div class="lesson-foot">
+                <div class="lesson-tags">
+                  <span class="tag">[학년]학년</span>
+                </div>
+                <span class="lesson-go">수업 보기 →</span>
+              </div>
+            </div>
+          </a>
+        -->
+
+      </div>
+
+      <div class="empty-state" id="emptyState">
+        <i class="fa-solid fa-magnifying-glass" style="font-size:28px;margin-bottom:12px;color:var(--border)"></i>
+        <p>검색 결과가 없습니다.</p>
+      </div>
+
+    </div>
+  </section>
+
+  <footer class="footer">
+    <div class="footer-inner">
+      <div class="footer-logo">이하얀 <span>archive</span></div>
+      <div class="footer-copy">© 2026 이하얀 · 마이스터고 디자인과 수업 아카이브</div>
+    </div>
+  </footer>
+
+  <button class="scroll-top" id="scrollTop" aria-label="맨 위로">
+    <i class="fa-solid fa-chevron-up"></i>
+  </button>
+
+  <script src="../js/main.js"></script>
+  <script>
+    /* 검색 + 필터 연동 시 결과 수 업데이트 */
+    function updateCount() {
+      const visible = document.querySelectorAll('.lesson-card[style=""], .lesson-card:not([style])').length;
+      const count = document.querySelectorAll('.lesson-card').length;
+      let v = 0;
+      document.querySelectorAll('.lesson-card').forEach(c => {
+        if (c.style.display !== 'none') v++;
+      });
+      const el = document.getElementById('resultCount');
+      if (el) el.innerHTML = `총 <strong>${v}</strong>개 과목`;
+    }
+
+    /* MutationObserver로 display 변화 감지 → 카운트 갱신 */
+    const grid = document.getElementById('lessonGrid');
+    if (grid) {
+      const mo = new MutationObserver(updateCount);
+      mo.observe(grid, { attributes: true, subtree: true, attributeFilter: ['style'] });
+    }
+  </script>
+</body>
+</html>
